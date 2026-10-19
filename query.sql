@@ -1,0 +1,19 @@
+CREATE TABLE loan(
+	id SERIAL PRIMARY KEY,
+	amount INT NOT NULL CHECK (amount > 0),
+	no_of_installments INT NOT NULL CHECK (no_of_installments > 0),
+	rate_of_interest DECIMAL(5,2) NOT NULL CHECK (rate_of_interest > 0),
+	emi INT NOT NULL CHECK (emi > 0),
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE part_payment(
+	id SERIAL PRIMARY KEY,
+	amount INT NOT NULL CHECK (amount > 0),
+	recalculation_option ENUM ('reduce_emi', 'reduce_tenure') NOT NULL DEFAULT 'reduce_emi',
+	loan_id BIGINT UNSIGNED NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	FOREIGN KEY(loan_id) REFERENCES loan(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
